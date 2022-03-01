@@ -35,7 +35,7 @@ th, td {
 </head>
 <body> 
 <center>
-	<h1>Chungus Server!</h1>
+	<h1>Chungus Server!!</h1>
 </center>
 <div class="container">
 <div class="container">
