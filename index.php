@@ -25,6 +25,11 @@ th, td {
 	border-bottom: 1px solid #DDD;
 }
 
+
+select {
+  background-color: black;
+}
+
 .container {
 	display: flex;
 	flex-direction: row;
@@ -64,26 +69,51 @@ if (!$connection) {
 }
 
 
+$selected_stat = "z:mined";
 $user = array();
-$mined = array();
+$stat_value = array();
+
+if (isset($_POST["stats"])) {
+	$selected_stat = $_POST["stats"];
+}
 
 $result = mysqli_query($connection, "SELECT * FROM My_Stats.stats ORDER BY val DESC");
 while ($row = mysqli_fetch_array($result)) {
-	if ($row["stat"] == "z:mined") {
-		$mined[count($mined)] = $row["val"];
+	if ($row["stat"] == $selected_stat) {
+		$stat_value[count($stat_value)] = $row["val"];
 		$user[count($user)] = get_username($connection, $row["uuid"]);
 	}
 }
+?>
 
-echo "<table><tr><th>Spiller</th> <th>Klodser minet</th></tr>"; 
+
+<table>
+<tr>
+<th>Spiller</th>
+<th>
+<form id="stat_form" action="index.php" method="post">
+<select name="stats" onchange="this.form.submit()">
+<option>Vælg statistik</option>
+<option value="z:mined">Klodser minet</option>
+<option value="z:placed">Klodser placeret</option>
+<option value="DEATHS">Gange død</option>
+</select>
+</form>
+</th>
+</tr>
+<?php
 for ($i = 0; $i < count($user); $i++) {
+	if ($i > 10) {
+		break;
+	}
+
 	echo "<tr>";
 	echo "<td>" . $user[$i] . "</td>";
-	echo "<td>" . $mined[$i] . "</td>";
+	echo "<td>" . $stat_value[$i] . "</td>";
 	echo "</tr>";	
 }
-echo "</table>";
 ?>
+</table>
 </div>
 </div>
 </body> 
